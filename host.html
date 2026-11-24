@@ -27,6 +27,7 @@
       <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L8 7m4-4 4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
       <symbol id="i-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
       <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 8 2a6 6 0 0 0 4-1.5V15a6 6 0 0 1-4 1.5c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/></symbol>
       <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
     </defs>
   </svg>
@@ -150,7 +151,10 @@
           <span class="swap-label"><span>Show player</span><span>Hide player</span></span>
         </button>
       </div>
-      <button class="btn-light btn-lg" id="btn-reveal">Reveal answer</button>
+      <div class="row" style="gap:8px">
+        <button class="btn-quiet end-game"><svg><use href="#i-flag"/></svg>End game now</button>
+        <button class="btn-light btn-lg" id="btn-reveal">Reveal answer</button>
+      </div>
     </div>
   </main>
 
@@ -179,7 +183,10 @@
         <span class="swap"><svg><use href="#i-pause"/></svg><svg><use href="#i-play"/></svg></span>
         <span class="swap-label"><span>Pause music</span><span>Play music</span></span>
       </button>
-      <button class="btn-primary btn-lg" id="btn-next">Next song</button>
+      <div class="row" style="gap:8px">
+        <button class="btn-quiet end-game"><svg><use href="#i-flag"/></svg>End game now</button>
+        <button class="btn-primary btn-lg" id="btn-next">Next song</button>
+      </div>
     </div>
   </main>
 

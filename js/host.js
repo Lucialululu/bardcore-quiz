@@ -573,9 +573,20 @@ $('#btn-next').onclick = () => {
   else startQuestion(game.qIndex + 1);
 };
 
+// End early: jump straight to the podium with the points so far
+document.querySelectorAll('.end-game').forEach((b) => {
+  b.onclick = () => {
+    if (!game || game.phase === 'final') return;
+    const where = game.qIndex >= 0 ? ` You're on song ${game.qIndex + 1} of ${game.songs.length}.` : '';
+    if (!confirm(`End the game now and show the final results?${where}`)) return;
+    finish();
+  };
+});
+
 // ── final ──
 function finish() {
   clearInterval(tickTimer);
+  if (game.round) game.round.locked = true;
   player?.pause();
   setPaused(true);
   game.phase = 'final';
