@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 /* ─────────────────────────────────────────────────────────────
    Bardcore Quiz · one red, many depths
@@ -33,7 +33,6 @@
   --r-lg: 28px;
   --r-md: 20px;
 
-  --serif: 'Playfair Display', Georgia, serif;
   --sans: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --ease-out: cubic-bezier(.2, .8, .2, 1);
@@ -75,9 +74,9 @@ code { font-size: .88em; background: oklch(1 0 0 / .08); padding: 1px 7px; borde
 .small { font-size: 14px; }
 .center { text-align: center; }
 
-/* serif display, white fading into rose like ink drying */
+/* display headings: bold Poppins, white fading into rose */
 .display {
-  font-family: var(--serif); font-weight: 700; letter-spacing: -0.01em; line-height: 1.08;
+  font-weight: 700; letter-spacing: -0.035em; line-height: 1.05;
   background: linear-gradient(180deg in oklch, var(--text) 30%, var(--red-300));
   -webkit-background-clip: text; background-clip: text; color: transparent;
   text-wrap: balance;
@@ -383,7 +382,7 @@ button svg { width: 18px; height: 18px; flex: none; }
 /* ── question (host) ────────────────────────────────── */
 .stage { display: flex; flex-direction: column; gap: 14px; padding-top: 20px; }
 .stage-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-.stage-head h1 { font-family: var(--serif); font-size: clamp(28px, 3.2vw, 42px); font-weight: 700; }
+.stage-head h1 { font-size: clamp(26px, 3vw, 38px); font-weight: 700; letter-spacing: -0.03em; }
 .progress-dots { display: flex; gap: 6px; flex-wrap: wrap; }
 .progress-dots i { width: 18px; height: 6px; border-radius: 99px; background: oklch(1 0 0 / .14); transition: width .4s var(--ease-spring), background .3s; }
 .progress-dots i.done { background: var(--red-300); opacity: .55; }
@@ -397,7 +396,7 @@ button svg { width: 18px; height: 18px; flex: none; }
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 10px 30px oklch(0.2 0.1 24 / .5));
 }
-.timer.up { font-family: var(--serif); font-size: clamp(60px, min(9vw, 13vh), 130px); padding: .35em 0 .25em; letter-spacing: -0.01em; }
+.timer.up { font-size: clamp(56px, min(8vw, 12vh), 120px); padding: .4em 0 .3em; letter-spacing: -0.04em; }
 .timer.low { animation: throb 1s var(--ease-out) infinite; }
 @keyframes throb { 0% { transform: scale(1); } 15% { transform: scale(1.045); } 100% { transform: scale(1); } }
 .timer-track { height: 8px; border-radius: 99px; background: oklch(0.08 0.03 22 / .5); box-shadow: inset 0 1px 3px oklch(0 0 0 / .5); overflow: hidden; margin: clamp(14px, 2.5vh, 26px) auto 0; max-width: 720px; }
@@ -442,7 +441,7 @@ button svg { width: 18px; height: 18px; flex: none; }
 }
 .reveal-hero .art { display: grid; place-items: center; background: radial-gradient(120% 120% at 30% 10% in oklch, var(--red-500), var(--red-800)); color: oklch(1 0 0 / .8); }
 .reveal-hero .art svg { width: 48px; height: 48px; }
-.answer-title { font-size: clamp(44px, 6.5vw, 92px); animation: unblur .9s .05s var(--ease-out) both; }
+.answer-title { font-size: clamp(42px, 6vw, 86px); line-height: 1; animation: unblur .9s .05s var(--ease-out) both; }
 .answer-artist { font-size: clamp(18px, 2vw, 22px); font-weight: 500; margin-top: 14px; animation: unblur .8s .2s var(--ease-out) both; }
 .cover-line { color: var(--text-2); margin-top: 2px; font-size: 15px; animation: unblur .8s .3s var(--ease-out) both; }
 @keyframes unblur { from { opacity: 0; filter: blur(14px); transform: translateY(8px); } to { opacity: 1; filter: none; transform: none; } }
@@ -478,7 +477,7 @@ button svg { width: 18px; height: 18px; flex: none; }
 .podium .score { color: var(--text-2); font-variant-numeric: tabular-nums; margin: 2px 0 12px; font-size: 15px; }
 .podium .block {
   border-radius: 28px 28px 10px 10px; display: grid; place-items: start center; padding-top: 18px;
-  font-family: var(--serif); font-weight: 800; font-size: 60px; line-height: 1;
+  font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.04em;
   transform-origin: bottom; animation: rise 1s var(--ease-spring) both;
   box-shadow: inset 0 1.5px 0 oklch(1 0 0 / .5), inset 0 -30px 40px -20px oklch(0.1 0.04 22 / .5), 0 30px 60px -30px oklch(0.5 0.2 26 / .6);
 }
@@ -515,7 +514,7 @@ button svg { width: 18px; height: 18px; flex: none; }
 .solved-box .pts { margin-left: auto; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .phone-thermo { --r: var(--r-lg); --p: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
 .phone-thermo .t { font-weight: 700; font-size: 64px; line-height: .9; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
-.phone-thermo .t.up { font-family: var(--serif); font-size: 32px; letter-spacing: -0.01em; padding: 10px 0; }
+.phone-thermo .t.up { font-size: 30px; letter-spacing: -0.03em; padding: 10px 0; }
 .phone-thermo .meta { text-align: right; font-size: 14px; color: var(--text-2); }
 .phone-thermo .meta b { display: block; font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .divider { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
@@ -526,7 +525,7 @@ button svg { width: 18px; height: 18px; flex: none; }
 .tries span { font-size: 13px; padding: 4px 12px; border-radius: 99px; background: oklch(1 0 0 / .05); border: 1px solid var(--line); color: var(--text-3); text-decoration: line-through; text-decoration-color: oklch(1 0 0 / .35); }
 .tries span.close { text-decoration: none; color: var(--ember); border-color: oklch(0.78 0.15 55 / .35); background: oklch(0.78 0.15 55 / .08); }
 .big-points { font-size: 44px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.my-rank { font-family: var(--serif); font-weight: 800; font-size: 130px; line-height: .9; text-align: center; }
+.my-rank { font-weight: 800; font-size: 120px; line-height: .9; letter-spacing: -0.06em; text-align: center; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: white; box-shadow: 0 0 0 3px oklch(1 0 0 / .2), 0 0 10px white; margin-right: 8px; vertical-align: middle; }
 .status-dot.off { background: var(--ember); box-shadow: 0 0 0 3px oklch(0.78 0.15 55 / .25); }
 .foot-link { text-align: center; margin-top: 28px; font-size: 14px; }
