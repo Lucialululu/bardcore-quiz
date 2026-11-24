@@ -194,6 +194,7 @@ $('#btn-open-lobby').onclick = () => {
 
 // ───────────────────────── GAME ─────────────────────────
 // Each player keeps one heraldic tincture for the whole game
+const initial = (name) => (String(name).trim()[0] || '?').toUpperCase();
 function tint(pid) {
   let h = 0;
   for (const c of String(pid)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -262,7 +263,7 @@ async function makeQr(url) {
 function renderLobbyPlayers() {
   const ps = Object.entries(game.players);
   $('#player-count').textContent = ps.length ? `${ps.length} ${ps.length === 1 ? 'player' : 'players'} ready` : 'Waiting for players';
-  $('#lobby-players').innerHTML = ps.map(([pid, p]) => `<span class="chip removable ${tint(pid)}" data-pid="${pid}">${esc(p.name)}</span>`).join('');
+  $('#lobby-players').innerHTML = ps.map(([pid, p]) => `<span class="chip removable ${tint(pid)}" data-pid="${pid}"><span class="av">${esc(initial(p.name))}</span>${esc(p.name)}</span>`).join('');
   $('#kick-hint').hidden = !ps.length;
   show('lobby');
 }
@@ -397,7 +398,7 @@ function renderQuestionPlayers() {
     : ps.length ? `<b>${got}</b> of ${ps.length} have found it` : 'No players yet';
   $('#q-players').innerHTML = ps.map(([pid, p]) => {
     const s = game.round.solved[pid] || {};
-    return `<span class="chip ${tint(pid)} ${s.title != null ? 'solved' : ''}">${esc(p.name)}${s.artist != null ? '<span class="star" title="Artist bonus">★</span>' : ''}</span>`;
+    return `<span class="chip ${tint(pid)} ${s.title != null ? 'solved' : ''}"><span class="av">${s.title != null ? '<svg><use href="#i-check"/></svg>' : esc(initial(p.name))}</span>${esc(p.name)}${s.artist != null ? '<span class="star" title="Artist bonus">★</span>' : ''}</span>`;
   }).join('');
   show('question');
 }
@@ -588,7 +589,7 @@ function renderResumeBanner() {
   const box = $('#resume-banner');
   if (!g || g.phase === 'final' || Date.now() - g.createdAt > 6 * 3600e3) { box.hidden = true; return; }
   box.innerHTML = `<span>A game is still running in room <b>${esc(g.code)}</b>, ${g.qIndex >= 0 ? `at song ${g.qIndex + 1} of ${g.songs.length}` : 'in the lobby'}, with ${Object.keys(g.players).length} players.</span>
-    <button class="btn-gold" id="btn-resume">Resume game</button>
+    <button class="btn-light" id="btn-resume">Resume game</button>
     <button class="btn-quiet" id="btn-discard">Discard it</button>`;
   box.hidden = false;
   $('#btn-resume').onclick = async () => {

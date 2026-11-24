@@ -31,8 +31,8 @@
     <!-- JOIN -->
     <section data-screen="join">
       <div id="demo-banner" class="notice" hidden>Demo mode: this only works in another tab on the host's computer.</div>
-      <div class="fluted calm" style="margin-bottom:14px">
-        <h1 class="hello" style="font-size:34px">Name that tune,<br>medieval edition</h1>
+      <div class="jelly calm" style="margin-bottom:14px">
+        <h1 class="hello display" style="font-size:34px">Name that tune,<br>medieval edition</h1>
         <p class="muted" style="margin-top:8px">Listen to the cover on the big screen, then type the original song's title.</p>
       </div>
       <form class="panel stack" id="join-form" autocomplete="off">
@@ -46,9 +46,9 @@
 
     <!-- WAITING -->
     <section data-screen="wait" hidden>
-      <div class="fluted calm center" style="padding:36px 24px">
+      <div class="jelly calm center" style="padding:36px 24px">
         <p class="muted">You're in as</p>
-        <h1 class="hello" id="wait-name" style="font-size:44px;margin:4px 0 14px;overflow-wrap:anywhere"></h1>
+        <h1 class="hello display" id="wait-name" style="font-size:44px;margin:4px 0 14px;overflow-wrap:anywhere"></h1>
         <p id="wait-text">Watch the big screen. The first song starts soon.</p>
         <p class="faint small" id="wait-count" style="margin-top:8px"></p>
       </div>
@@ -56,7 +56,7 @@
 
     <!-- QUESTION -->
     <section data-screen="question" hidden>
-      <div class="fluted phone-thermo" id="pq-thermo">
+      <div class="jelly phone-thermo" id="pq-thermo">
         <div class="t" id="pq-timer">30</div>
         <div class="meta"><b id="pq-score">0</b><span id="pq-label">Song 1 of 10</span></div>
       </div>
@@ -80,7 +80,7 @@
           <div id="artist-area">
             <form class="guess-form" id="artist-form" autocomplete="off">
               <input class="guess-input" id="artist-input" placeholder="Who sang the original?" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Original artist">
-              <button class="btn-gold">Guess</button>
+              <button class="btn-light">Guess</button>
             </form>
             <div class="feedback" id="artist-fb" aria-live="polite"></div>
             <div class="tries" id="artist-tries"></div>
@@ -93,9 +93,9 @@
 
     <!-- REVEAL -->
     <section data-screen="reveal" hidden>
-      <div class="fluted calm" style="margin-bottom:14px">
+      <div class="jelly calm" style="margin-bottom:14px">
         <p class="muted">The answer was</p>
-        <h1 class="answer-title" id="pr-title" style="font-size:44px;margin:6px 0 8px"></h1>
+        <h1 class="answer-title display" id="pr-title" style="font-size:44px;margin:6px 0 8px"></h1>
         <p id="pr-artist"></p>
       </div>
       <div class="panel center">
@@ -107,7 +107,7 @@
 
     <!-- FINAL -->
     <section data-screen="final" hidden>
-      <div class="fluted calm center" style="padding:36px 24px">
+      <div class="jelly calm center" style="padding:36px 24px">
         <p class="muted">You finished</p>
         <div class="my-rank" id="pf-rank" style="margin:10px 0 12px">#1</div>
         <div class="big-points" id="pf-score" style="font-size:28px"></div>

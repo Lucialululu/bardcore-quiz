@@ -26,6 +26,7 @@
       <symbol id="i-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
       <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L8 7m4-4 4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
       <symbol id="i-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
       <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
     </defs>
   </svg>
@@ -57,12 +58,12 @@
       <p class="lede">Paste a Spotify link for each cover. The song title is the original song's name, which is what players have to type. Use the start time to skip long intros.</p>
       <div class="song-list" id="song-list"></div>
       <div class="row" style="margin-top:14px;gap:8px">
-        <button class="btn-gold" id="btn-add"><svg><use href="#i-add"/></svg>Add song</button>
+        <button class="btn-light" id="btn-add"><svg><use href="#i-add"/></svg>Add song</button>
         <button id="btn-bulk-toggle"><svg><use href="#i-list"/></svg>Paste several links</button>
       </div>
       <div id="bulk" hidden style="margin-top:14px">
         <label class="field">One Spotify link per line<textarea id="bulk-text" rows="5" placeholder="https://open.spotify.com/track/…&#10;https://open.spotify.com/track/…"></textarea></label>
-        <div class="row" style="margin-top:10px"><button class="btn-gold" id="btn-bulk-add">Add these songs</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn-light" id="btn-bulk-add">Add these songs</button></div>
       </div>
     </section>
 
@@ -92,7 +93,7 @@
   <!-- ───────── LOBBY ───────── -->
   <main class="wrap" data-screen="lobby" hidden>
     <div class="lobby">
-      <div class="fluted calm">
+      <div class="jelly stacked lobby-card">
         <p class="join-steps">Join on your phone at <span class="url" id="join-url"></span> with this code</p>
         <div class="room-code" id="room-code" aria-live="polite">····</div>
       </div>
@@ -118,7 +119,7 @@
       <h1 id="q-label">Song 1 of 10</h1>
       <div class="progress-dots" id="q-dots" aria-hidden="true"></div>
     </div>
-    <div class="fluted thermo" id="thermo">
+    <div class="jelly stacked thermo" id="thermo">
       <div class="timer" id="timer" aria-live="off">30</div>
       <div class="timer-track"><div id="timer-bar"></div></div>
       <p class="found" id="answered"></p>
@@ -145,16 +146,16 @@
           <span class="swap-label"><span>Show player</span><span>Hide player</span></span>
         </button>
       </div>
-      <button class="btn-gold btn-lg" id="btn-reveal">Reveal answer</button>
+      <button class="btn-light btn-lg" id="btn-reveal">Reveal answer</button>
     </div>
   </main>
 
   <!-- ───────── REVEAL ───────── -->
   <main class="wrap" data-screen="reveal" hidden>
-    <section class="fluted calm reveal-hero" id="reveal-hero">
+    <section class="jelly stacked reveal-hero" id="reveal-hero">
       <div id="rv-art"></div>
       <div>
-        <div class="answer-title" id="rv-title"></div>
+        <div class="answer-title display" id="rv-title"></div>
         <div class="answer-artist" id="rv-artist"></div>
         <div class="cover-line" id="rv-cover"></div>
       </div>
@@ -180,7 +181,7 @@
 
   <!-- ───────── FINAL ───────── -->
   <main class="wrap" data-screen="final" hidden>
-    <h1 class="final-title">Hail the champions</h1>
+    <h1 class="final-title display">Hail the champions</h1>
     <div class="podium" id="podium"></div>
     <section class="panel" style="max-width:640px;margin:0 auto">
       <h2>Final standings</h2>
