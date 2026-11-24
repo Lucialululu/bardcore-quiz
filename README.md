@@ -50,8 +50,8 @@ In **Game settings**, set a **Room code** (4 letters, e.g. `BARD`) to use the sa
 
 ### Answer tips
 
-- **Also accept** takes comma-separated alternatives, for example `Rah rah ah ah ah, Gaga oh la la`.
-- In **Original artist**, separate alternatives with `/`, for example `Simon & Garfunkel / Simon and Garfunkel`.
+- **Also accept** takes alternatives separated by `;` (or commas, if the cell is in quotes in a CSV), for example `Girls Just Wanna Have Fun; Girls Wanna Have Fun`.
+- In **Original artist**, separate alternatives with `;` or `/`, for example `Major Lazer; DJ Snake; MØ`. Any one of them counts.
 - Text in brackets is ignored on both sides, so `Old Town Road (feat. Billy Ray Cyrus)` accepts `old town road`.
 
 ---

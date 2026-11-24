@@ -355,7 +355,7 @@ function onGuess({ pid, kind, text, gid }) {
 
   const answers = kind === 'title'
     ? [song.title, ...splitAlts(song.alts)]
-    : song.artist.split('/').map((s) => s.trim()).filter(Boolean);
+    : [song.artist, ...song.artist.split(/[/;]/)].map((s) => s.trim()).filter(Boolean);
   const verdict = checkGuess(text, answers);
   let points = 0;
   if (verdict === 'correct') {
