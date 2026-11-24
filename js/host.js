@@ -32,9 +32,9 @@ function show(name) {
   document.querySelectorAll('[data-screen]').forEach((el) => { el.hidden = el.dataset.screen !== name; });
   if (name !== currentScreen) { currentScreen = name; window.scrollTo(0, 0); }
   const tr = $('#top-right');
+  const n = game ? Object.keys(game.players).length : 0;
   tr.innerHTML = game && name !== 'setup'
-    ? `<span class="caps small muted">Room</span> <span class="caps" style="font-size:22px;color:var(--gold-soft)">${esc(game.code)}</span>
-       <span class="caps small muted" style="margin-left:14px">${Object.keys(game.players).length} players</span>`
+    ? `<span class="room-pill">${n} ${n === 1 ? 'player' : 'players'} in room <b>${esc(game.code)}</b></span>`
     : '';
 }
 
@@ -43,22 +43,24 @@ function renderSongs() {
   const list = $('#song-list');
   list.innerHTML = quiz.songs.map((s, i) => `
     <div class="song-row" data-id="${s.id}">
-      <div class="num">${i + 1}</div>
-      <div class="thumb" style="${s.thumb ? `background-image:url('${esc(s.thumb)}')` : ''}">${s.thumb ? '' : '🎵'}</div>
+      <div class="thumb" style="${s.thumb ? `background-image:url('${esc(s.thumb)}')` : ''}">
+        <span class="idx">${i + 1}</span>${s.thumb ? '' : '<svg><use href="#i-note"/></svg>'}
+      </div>
       <div class="fields">
-        <label class="wide">Spotify link<input data-f="url" value="${esc(s.url)}" placeholder="https://open.spotify.com/track/…"></label>
-        <label>Song title (the answer)<input data-f="title" value="${esc(s.title)}" placeholder="e.g. Bad Romance"></label>
-        <label>Original artist<input data-f="artist" value="${esc(s.artist)}" placeholder="e.g. Lady Gaga"></label>
-        <label>Also accept <small>(comma-separated, optional)</small><input data-f="alts" value="${esc(s.alts)}" placeholder="e.g. Rah rah ah ah ah"></label>
-        <label>Start at (seconds)<input data-f="start" type="number" min="0" step="1" value="${Number(s.start) || 0}"></label>
-        <div class="cover-name">${s.coverName ? '🪕 Spotify track: ' + esc(s.coverName) : ''}</div>
+        <label class="field wide">Spotify link<input data-f="url" value="${esc(s.url)}" placeholder="https://open.spotify.com/track/…" inputmode="url"></label>
+        <label class="field">Song title, the answer<input data-f="title" value="${esc(s.title)}" placeholder="Bad Romance"></label>
+        <label class="field">Original artist<input data-f="artist" value="${esc(s.artist)}" placeholder="Lady Gaga"></label>
+        <label class="field"><span>Also accept <span class="hint">comma-separated</span></span><input data-f="alts" value="${esc(s.alts)}" placeholder="Rah rah ah ah ah"></label>
+        <label class="field"><span>Start at <span class="hint">seconds in</span></span><input data-f="start" type="number" min="0" step="1" value="${Number(s.start) || 0}"></label>
+        <div class="cover-name">${s.coverName ? 'On Spotify as “' + esc(s.coverName) + '”' : ''}</div>
       </div>
       <div class="row-btns">
-        <button class="ghost icon" data-act="up" title="Move up" ${i === 0 ? 'disabled' : ''}>↑</button>
-        <button class="ghost icon" data-act="down" title="Move down" ${i === quiz.songs.length - 1 ? 'disabled' : ''}>↓</button>
-        <button class="ghost icon" data-act="del" title="Remove">✕</button>
+        <button data-act="up" aria-label="Move up" title="Move up" ${i === 0 ? 'disabled' : ''}><svg><use href="#i-up"/></svg></button>
+        <button data-act="down" aria-label="Move down" title="Move down" ${i === quiz.songs.length - 1 ? 'disabled' : ''}><svg><use href="#i-down"/></svg></button>
+        <button data-act="del" aria-label="Remove song" title="Remove song"><svg><use href="#i-x"/></svg></button>
       </div>
     </div>`).join('');
+  renderSummary();
   quiz.songs.forEach((s) => markUrl(s));
 }
 
@@ -82,8 +84,8 @@ async function lookupSong(s) {
   saveQuiz();
   const row = rowOf(s.id); if (!row) return;
   const th = row.querySelector('.thumb');
-  if (s.thumb) { th.style.backgroundImage = `url('${s.thumb}')`; th.textContent = ''; }
-  row.querySelector('.cover-name').textContent = s.coverName ? '🪕 Spotify track: ' + s.coverName : '';
+  if (s.thumb) { th.style.backgroundImage = `url('${s.thumb}')`; th.querySelector('svg')?.remove(); }
+  row.querySelector('.cover-name').textContent = s.coverName ? `On Spotify as “${s.coverName}”` : '';
   const t = row.querySelector('[data-f=title]'); if (!t.value) t.value = s.title;
 }
 
@@ -91,7 +93,7 @@ $('#song-list').addEventListener('input', (e) => {
   const f = e.target.dataset.f; if (!f) return;
   const s = quiz.songs.find((x) => x.id === e.target.closest('.song-row').dataset.id);
   s[f] = f === 'start' ? Math.max(0, Number(e.target.value) || 0) : e.target.value;
-  if (f === 'url') markUrl(s);
+  if (f === 'url') { markUrl(s); renderSummary(); }
   saveQuiz();
 });
 $('#song-list').addEventListener('change', (e) => {
@@ -100,8 +102,9 @@ $('#song-list').addEventListener('change', (e) => {
   lookupSong(s);
 });
 $('#song-list').addEventListener('click', (e) => {
-  const act = e.target.dataset.act; if (!act) return;
-  const i = quiz.songs.findIndex((x) => x.id === e.target.closest('.song-row').dataset.id);
+  const btn = e.target.closest('[data-act]'); if (!btn) return;
+  const act = btn.dataset.act;
+  const i = quiz.songs.findIndex((x) => x.id === btn.closest('.song-row').dataset.id);
   if (act === 'del') { quiz.songs.splice(i, 1); if (!quiz.songs.length) quiz.songs.push(blankSong()); }
   if (act === 'up' && i > 0) [quiz.songs[i - 1], quiz.songs[i]] = [quiz.songs[i], quiz.songs[i - 1]];
   if (act === 'down' && i < quiz.songs.length - 1) [quiz.songs[i + 1], quiz.songs[i]] = [quiz.songs[i], quiz.songs[i + 1]];
@@ -143,15 +146,27 @@ $('#file-import').onchange = async (e) => {
   e.target.value = '';
 };
 
+function renderSummary() {
+  const n = quiz.songs.filter((s) => toUri(s.url)).length;
+  const mins = Math.max(1, Math.round((n * (quiz.settings.duration + 15)) / 60));
+  $('#setup-summary').textContent = n ? `${n} ${n === 1 ? 'song' : 'songs'}, roughly ${mins} min of play` : 'Add your first song to get started';
+}
+function renderDuration() {
+  const d = quiz.settings.duration;
+  $('#duration-val').innerHTML = `${d}<small>s</small>`;
+  const el = $('#set-duration');
+  el.style.setProperty('--fill', ((d - el.min) / (el.max - el.min)) * 100 + '%');
+}
+
 function renderSettings() {
   const st = quiz.settings;
-  $('#set-duration').value = st.duration; $('#duration-val').textContent = st.duration + ' s';
+  $('#set-duration').value = st.duration; renderDuration();
   $('#set-artist').checked = st.artistBonus;
   $('#set-autoreveal').checked = st.autoReveal;
   $('#set-early').checked = st.endEarly;
   $('#set-shuffle').checked = st.shuffle;
 }
-$('#set-duration').oninput = (e) => { quiz.settings.duration = Number(e.target.value); $('#duration-val').textContent = e.target.value + ' s'; saveQuiz(); };
+$('#set-duration').oninput = (e) => { quiz.settings.duration = Number(e.target.value); renderDuration(); renderSummary(); saveQuiz(); };
 [['#set-artist', 'artistBonus'], ['#set-autoreveal', 'autoReveal'], ['#set-early', 'endEarly'], ['#set-shuffle', 'shuffle']]
   .forEach(([sel, key]) => { $(sel).onchange = (e) => { quiz.settings[key] = e.target.checked; saveQuiz(); }; });
 
@@ -171,14 +186,22 @@ function validate() {
 $('#btn-open-lobby').onclick = () => {
   const { errors, songs } = validate();
   const box = $('#setup-errors');
+  box.className = 'notice warn';
   if (errors.length) { box.innerHTML = errors.map(esc).join('<br>'); box.hidden = false; box.scrollIntoView({ behavior: 'smooth' }); return; }
   box.hidden = true;
-  newGame(songs);
+  newGame(songs).catch(() => {});
 };
 
 // ───────────────────────── GAME ─────────────────────────
+// Each player keeps one heraldic tincture for the whole game
+function tint(pid) {
+  let h = 0;
+  for (const c of String(pid)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return 'tint-' + (h % 6);
+}
+
 function makeCode() {
-  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const A = 'ABCDEFGHJKLMNPRSTUVWXYZ';
   return Array.from({ length: 4 }, () => A[Math.floor(Math.random() * A.length)]).join('');
 }
 
@@ -201,7 +224,11 @@ async function goOnline() {
   try {
     net = await connect(game.code, onMessage);
   } catch (err) {
-    alert('Could not connect to Supabase: ' + err.message + '\nCheck js/config.js and the README.');
+    const box = $('#setup-errors');
+    box.className = 'notice error';
+    box.innerHTML = `<span><b>Couldn't connect to Supabase.</b> ${esc(err.message)}. Check the URL and key in <code>js/config.js</code>, and that Realtime is enabled for the project.</span>`;
+    box.hidden = false;
+    show('setup');
     throw err;
   }
 }
@@ -228,19 +255,19 @@ async function makeQr(url) {
     const src = await QR.toDataURL(url, { margin: 1, width: 600, color: { dark: '#2b1d0e', light: '#f3e6c8' } });
     box.innerHTML = `<img src="${src}" alt="QR code to join">`;
   } catch {
-    box.innerHTML = `<p style="color:var(--ink)">Scan unavailable.<br>Go to <b>${esc(url)}</b></p>`;
+    box.innerHTML = `<p>QR code unavailable.<br>Go to <b>${esc(url)}</b></p>`;
   }
 }
 
 function renderLobbyPlayers() {
   const ps = Object.entries(game.players);
-  $('#player-count').textContent = ps.length ? `${ps.length} player${ps.length === 1 ? '' : 's'} joined` : 'Waiting for players…';
-  $('#lobby-players').innerHTML = ps.map(([pid, p]) => `<span class="chip removable" data-pid="${pid}">${esc(p.name)}</span>`).join('');
+  $('#player-count').textContent = ps.length ? `${ps.length} ${ps.length === 1 ? 'player' : 'players'} ready` : 'Waiting for players';
+  $('#lobby-players').innerHTML = ps.map(([pid, p]) => `<span class="chip removable ${tint(pid)}" data-pid="${pid}">${esc(p.name)}</span>`).join('');
   $('#kick-hint').hidden = !ps.length;
   show('lobby');
 }
 $('#lobby-players').onclick = (e) => {
-  const pid = e.target.dataset.pid; if (!pid) return;
+  const pid = e.target.closest('[data-pid]')?.dataset.pid; if (!pid) return;
   if (!confirm(`Remove ${game.players[pid].name}?`)) return;
   delete game.players[pid]; saveGame();
   net?.send({ t: 'kick', pid });
@@ -313,7 +340,7 @@ function maybeEndEarly() {
   });
   if (all) {
     game.round.endsAt = Math.min(game.round.endsAt, Date.now() + 1500);
-    toastAll = 'Everyone got it!';
+    toastAll = 'Everyone found it';
   }
 }
 let toastAll = '';
@@ -323,7 +350,7 @@ function ensurePlayer(uri) {
   if (player) return player;
   player = createPlayer($('#spotify-embed'), uri, {
     onPlaying: (on) => { $('#player-box').classList.toggle('playing', on); if (on) $('#play-hint').hidden = true; },
-    onBlocked: () => { $('#play-hint').hidden = false; $('#player-box').classList.add('peek'); $('#btn-peek').textContent = 'Hide player'; },
+    onBlocked: () => { $('#play-hint').hidden = false; setPeek(true); },
   });
   player.ready.catch(() => {
     $('#play-hint').hidden = false;
@@ -344,17 +371,19 @@ function startQuestion(i, keepSolved = false) {
   renderQuestion();
   show('question');
   broadcast();
+  setPaused(false);
   const song = game.songs[i];
   ensurePlayer(song.uri).playClip(song.uri, song.start).catch(() => {});
   startTicking();
 }
 
 function renderQuestion() {
-  $('#q-label').textContent = `SONG ${game.qIndex + 1} OF ${game.songs.length}`;
+  $('#q-label').textContent = `Song ${game.qIndex + 1} of ${game.songs.length}`;
   $('#player-box').classList.remove('peek');
-  $('#btn-reveal').classList.remove('primary');
-  $('#btn-peek').textContent = 'Show player';
-  $('#btn-pause').textContent = '❚❚ Pause music';
+
+  setPeek(false);
+  setPaused(false);
+  renderDots();
   renderQuestionPlayers();
   tick();
 }
@@ -363,12 +392,18 @@ function renderQuestionPlayers() {
   if (game.phase !== 'question') return;
   const ps = Object.entries(game.players);
   const got = ps.filter(([pid]) => game.round.solved[pid]?.title != null).length;
-  $('#answered').textContent = toastAll || `${got} of ${ps.length} have found it`;
+  $('#answered').innerHTML = toastAll
+    ? esc(toastAll)
+    : ps.length ? `<b>${got}</b> of ${ps.length} have found it` : 'No players yet';
   $('#q-players').innerHTML = ps.map(([pid, p]) => {
     const s = game.round.solved[pid] || {};
-    return `<span class="chip ${s.title != null ? 'solved' : ''}">${esc(p.name)}${s.artist != null ? '<span class="star">★</span>' : ''}</span>`;
+    return `<span class="chip ${tint(pid)} ${s.title != null ? 'solved' : ''}">${esc(p.name)}${s.artist != null ? '<span class="star" title="Artist bonus">★</span>' : ''}</span>`;
   }).join('');
   show('question');
+}
+
+function renderDots() {
+  $('#q-dots').innerHTML = game.songs.map((_, i) => `<i class="${i < game.qIndex ? 'done' : i === game.qIndex ? 'now' : ''}"></i>`).join('');
 }
 
 function startTicking() {
@@ -384,26 +419,35 @@ function tick() {
   t.textContent = rem > 0 ? secs : "Time's up!";
   t.classList.toggle('low', secs <= 5 && secs > 0);
   t.classList.toggle('up', rem <= 0);
-  $('#timer-bar').style.width = (100 * rem / game.round.duration) + '%';
+  const frac = Math.min(1, rem / game.round.duration);
+  $('#timer-bar').style.width = (100 * frac) + '%';
+  $('#thermo').style.setProperty('--heat', (1 - frac).toFixed(3));
   if (rem <= 0 && !game.round.locked) {
     game.round.locked = true;
     saveGame();
-    $('#btn-reveal').classList.add('primary');
+
     broadcast();
     if (game.settings.autoReveal || toastAll) setTimeout(() => game.phase === 'question' && reveal(), 1200);
   }
   if (Date.now() - lastSync > 3000) { lastSync = Date.now(); broadcast(); }
 }
 
-$('#btn-replay').onclick = () => { player?.replay(); $('#btn-pause').textContent = '❚❚ Pause music'; };
 let paused = false;
-const togglePause = (btn) => {
-  paused = !paused;
+function setPaused(on) {
+  paused = on;
+  document.querySelectorAll('#btn-pause, #btn-pause-2').forEach((b) => { b.dataset.on = String(on); });
+}
+function setPeek(on) {
+  $('#player-box').classList.toggle('peek', on);
+  $('#btn-peek').dataset.on = String(on);
+}
+$('#btn-replay').onclick = () => { player?.replay(); setPaused(false); };
+const togglePause = () => {
+  setPaused(!paused);
   paused ? player?.pause() : player?.resume();
-  document.querySelectorAll('#btn-pause, #btn-pause-2').forEach((b) => { b.textContent = paused ? '▶ Play music' : '❚❚ Pause music'; });
 };
-$('#btn-pause').onclick = () => togglePause();
-$('#btn-pause-2').onclick = () => togglePause();
+$('#btn-pause').onclick = togglePause;
+$('#btn-pause-2').onclick = togglePause;
 $('#btn-plus').onclick = () => {
   if (game.phase !== 'question') return;
   game.round.endsAt = Math.max(Date.now(), game.round.endsAt) + 10000;
@@ -411,10 +455,7 @@ $('#btn-plus').onclick = () => {
   $('#timer').classList.remove('low');
   saveGame(); broadcast(); tick();
 };
-$('#btn-peek').onclick = () => {
-  const on = $('#player-box').classList.toggle('peek');
-  $('#btn-peek').textContent = on ? 'Hide player' : 'Show player';
-};
+$('#btn-peek').onclick = () => setPeek(!$('#player-box').classList.contains('peek'));
 $('#btn-reveal').onclick = () => reveal();
 
 // ── reveal ──
@@ -456,40 +497,41 @@ function renderReveal() {
   const r = game.lastReveal;
   $('#rv-title').textContent = r.title;
   $('#rv-artist').textContent = r.artist ? 'by ' + r.artist : '';
-  $('#rv-cover').textContent = r.coverName ? `Bardcore version: “${r.coverName}”` : '';
-  const img = $('#rv-thumb');
-  if (r.thumb) { img.src = r.thumb; img.hidden = false; } else img.hidden = true;
+  $('#rv-cover').textContent = r.coverName ? `You heard “${r.coverName}”` : '';
+  $('#rv-art').outerHTML = r.thumb
+    ? `<img id="rv-art" src="${esc(r.thumb)}" alt="">`
+    : `<div id="rv-art" class="art"><svg><use href="#i-note"/></svg></div>`;
 
   const got = r.round.filter((x) => x.pts > 0);
   $('#rv-round').innerHTML = got.length
-    ? got.map((x, i) => `<li style="animation-delay:${i * 80}ms">
-        <span class="rank">${x.title ? '✓' : ''}${x.artist ? '★' : ''}</span>
-        <span class="name">${esc(x.name)}</span>
-        <span class="muted small">${x.secs != null ? x.secs + ' s' : ''}</span>
+    ? got.map((x, i) => `<li style="animation-delay:${i * 70}ms">
+        <span class="rank">${i + 1}</span>
+        <span class="name">${esc(x.name)}<small>${x.secs != null ? x.secs + ' s' : ''}${x.artist ? ' · artist ★' : ''}</small></span>
+        <span></span>
         <span class="delta">+${x.pts}</span></li>`).join('')
-    : '<li><span class="name muted">Nobody got this one! 🐉</span></li>';
+    : '<li class="empty">Nobody found this one. A tough crowd, or a tough song.</li>';
 
-  $('#rv-board').innerHTML = r.board.slice(0, 10).map((x, i) => `<li style="animation-delay:${300 + i * 80}ms">
-      <span class="rank">${x.rank}.</span>
-      <span class="name">${esc(x.name)}</span>
-      <span class="move ${x.move > 0 ? 'up' : x.move < 0 ? 'down' : ''}">${x.move > 0 ? '▲' + x.move : x.move < 0 ? '▼' + -x.move : ''}</span>
+  $('#rv-board').innerHTML = r.board.slice(0, 10).map((x, i) => `<li style="animation-delay:${250 + i * 70}ms">
+      <span class="rank ${x.rank === 1 ? 'medal' : ''}">${x.rank}</span>
+      <span class="name">${esc(x.name)}${x.move ? `<span class="move ${x.move > 0 ? 'up' : 'down'}">${x.move > 0 ? '▲' + x.move : '▼' + -x.move}</span>` : ''}</span>
       <span class="delta">${x.delta ? '+' + x.delta : ''}</span>
-      <span class="pts">${x.score}</span></li>`).join('') || '<li><span class="name muted">No players yet</span></li>';
+      <span class="pts">${x.score}</span></li>`).join('') || '<li class="empty">No players yet</li>';
 
   const last = game.qIndex >= game.songs.length - 1;
-  $('#btn-next').textContent = last ? 'Final results 🏆' : 'Next song →';
+  $('#btn-next').textContent = last ? 'Show final results' : `Play song ${game.qIndex + 2}`;
   show('reveal');
 }
 
 $('#btn-next').onclick = () => {
   if (game.qIndex >= game.songs.length - 1) finish();
-  else { paused = false; document.querySelectorAll('#btn-pause, #btn-pause-2').forEach((b) => { b.textContent = '❚❚ Pause music'; }); startQuestion(game.qIndex + 1); }
+  else startQuestion(game.qIndex + 1);
 };
 
 // ── final ──
 function finish() {
   clearInterval(tickTimer);
   player?.pause();
+  setPaused(true);
   game.phase = 'final';
   game.finalBoard = boardFrom(Object.entries(game.players), () => 0);
   saveGame();
@@ -503,10 +545,11 @@ function renderFinal() {
   $('#podium').innerHTML = order.map((i) => b[i] ? `
     <div class="step p${i + 1}">
       <div class="who">${esc(b[i].name)}</div>
-      <div class="score">${b[i].score} pts</div>
+      <div class="score">${b[i].score} points</div>
       <div class="block">${b[i].rank}</div>
     </div>` : '').join('');
-  $('#final-board').innerHTML = b.map((x) => `<li><span class="rank">${x.rank}.</span><span class="name">${esc(x.name)}</span><span class="pts">${x.score}</span></li>`).join('');
+  $('#final-board').innerHTML = b.map((x) => `<li><span class="rank ${x.rank === 1 ? 'medal' : ''}">${x.rank}</span><span class="name">${esc(x.name)}</span><span></span><span class="pts">${x.score}</span></li>`).join('')
+    || '<li class="empty">No players took part</li>';
   show('final');
 }
 
@@ -544,13 +587,13 @@ function renderResumeBanner() {
   const g = load(GAME_KEY);
   const box = $('#resume-banner');
   if (!g || g.phase === 'final' || Date.now() - g.createdAt > 6 * 3600e3) { box.hidden = true; return; }
-  box.innerHTML = `A game is in progress (room <b>${esc(g.code)}</b>, ${g.qIndex >= 0 ? `song ${g.qIndex + 1} of ${g.songs.length}` : 'in the lobby'}, ${Object.keys(g.players).length} players).
-    <button class="gold icon" id="btn-resume" style="margin-left:10px">Resume it</button>
-    <button class="ghost icon" id="btn-discard">Discard</button>`;
+  box.innerHTML = `<span>A game is still running in room <b>${esc(g.code)}</b>, ${g.qIndex >= 0 ? `at song ${g.qIndex + 1} of ${g.songs.length}` : 'in the lobby'}, with ${Object.keys(g.players).length} players.</span>
+    <button class="btn-gold" id="btn-resume">Resume game</button>
+    <button class="btn-quiet" id="btn-discard">Discard it</button>`;
   box.hidden = false;
   $('#btn-resume').onclick = async () => {
     game = g;
-    await goOnline();
+    try { await goOnline(); } catch { return; }
     if (game.phase === 'lobby') enterLobby();
     else if (game.phase === 'question') {
       // Restart the current song with a fresh timer (keeps points already earned)

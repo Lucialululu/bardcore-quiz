@@ -3,149 +3,190 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1c120f">
   <title>Bardcore Quiz · Host</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪕</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238f2a2a'/><path d='M13 22V9l9-2v13' stroke='%23e9c46a' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='10.5' cy='22' r='2.6' fill='%23e9c46a'/><circle cx='19.5' cy='20' r='2.6' fill='%23e9c46a'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+      <symbol id="i-replay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8Z"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9.5 2.5h5"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.2 3.1M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M2 2l20 20"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+      <symbol id="i-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+      <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L8 7m4-4 4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+      <symbol id="i-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    </defs>
+  </svg>
+
   <header class="topbar">
-    <div class="brand">Bardcore Quiz <small>Host</small></div>
-    <div class="row" id="top-right"></div>
+    <div class="brand">
+      <span class="brand-mark"><svg><use href="#i-note"/></svg></span>
+      Bardcore Quiz <span class="role">Host</span>
+    </div>
+    <div id="top-right"></div>
   </header>
 
   <!-- ───────── SETUP ───────── -->
   <main class="wrap" data-screen="setup">
-    <div id="demo-banner" class="banner" hidden>
-      <b>Demo mode:</b> Supabase isn't set up yet (see <code>js/config.js</code>), so phones can't join.
-      You can still test by opening the player page in another tab of this browser.
+    <div id="demo-banner" class="notice" hidden>
+      <span><b>Demo mode.</b> Supabase isn't connected (see <code>js/config.js</code>), so phones can't join. Test it by opening the player page in another tab.</span>
     </div>
-    <div id="resume-banner" class="banner" hidden></div>
+    <div id="resume-banner" class="notice" hidden></div>
 
-    <section class="card">
-      <div class="row spread">
+    <section class="panel">
+      <div class="panel-head">
         <h2>Songs</h2>
-        <div class="row">
-          <button class="ghost icon" id="btn-import">Import quiz</button>
-          <button class="ghost icon" id="btn-export">Export quiz</button>
+        <div class="row" style="gap:4px">
+          <button class="btn-quiet" id="btn-import"><svg><use href="#i-in"/></svg>Import</button>
+          <button class="btn-quiet" id="btn-export"><svg><use href="#i-out"/></svg>Export</button>
           <input type="file" id="file-import" accept="application/json,.json" hidden>
         </div>
       </div>
-      <p class="muted small">Paste a Spotify link to each medieval cover. In <b>Song title</b>, write the <i>original</i> song's title, which is what players must guess. Use <b>Start at</b> to skip long intros.</p>
+      <p class="lede">Paste a Spotify link for each cover. The song title is the original song's name, which is what players have to type. Use the start time to skip long intros.</p>
       <div class="song-list" id="song-list"></div>
-      <div class="row" style="margin-top:14px">
-        <button class="gold" id="btn-add">+ Add song</button>
-        <button class="ghost" id="btn-bulk-toggle">Paste many links</button>
+      <div class="row" style="margin-top:14px;gap:8px">
+        <button class="btn-gold" id="btn-add"><svg><use href="#i-add"/></svg>Add song</button>
+        <button id="btn-bulk-toggle"><svg><use href="#i-list"/></svg>Paste several links</button>
       </div>
-      <div id="bulk" hidden style="margin-top:12px">
-        <label>One Spotify link per line<textarea id="bulk-text" rows="5" placeholder="https://open.spotify.com/track/...&#10;https://open.spotify.com/track/..."></textarea></label>
-        <div class="row" style="margin-top:8px"><button class="gold" id="btn-bulk-add">Add these links</button></div>
+      <div id="bulk" hidden style="margin-top:14px">
+        <label class="field">One Spotify link per line<textarea id="bulk-text" rows="5" placeholder="https://open.spotify.com/track/…&#10;https://open.spotify.com/track/…"></textarea></label>
+        <div class="row" style="margin-top:10px"><button class="btn-gold" id="btn-bulk-add">Add these songs</button></div>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Settings</h2>
+    <section class="panel">
+      <h2>Game settings</h2>
       <div class="settings-grid">
-        <div>
-          <label for="set-duration">Time per song</label>
-          <div class="row" style="flex-wrap:nowrap">
-            <input type="range" id="set-duration" min="10" max="120" step="5">
-            <span class="duration-val" id="duration-val"></span>
-          </div>
+        <div class="duration">
+          <label class="field" for="set-duration">Time per song</label>
+          <div class="val" id="duration-val">30<small>s</small></div>
+          <input type="range" id="set-duration" min="10" max="120" step="5" aria-label="Time per song in seconds">
         </div>
-        <label class="check"><input type="checkbox" id="set-artist"> Bonus points for guessing the original artist</label>
-        <label class="check"><input type="checkbox" id="set-autoreveal"> Reveal the answer automatically when time runs out</label>
-        <label class="check"><input type="checkbox" id="set-early"> End the song early when everyone has got it</label>
-        <label class="check"><input type="checkbox" id="set-shuffle"> Shuffle song order</label>
+        <label class="toggle"><input type="checkbox" id="set-artist"><span class="track"></span><span>Artist bonus<small>Players can also guess the original artist for 300 extra points.</small></span></label>
+        <label class="toggle"><input type="checkbox" id="set-autoreveal"><span class="track"></span><span>Reveal when time runs out<small>Turn off to reveal each answer yourself.</small></span></label>
+        <label class="toggle"><input type="checkbox" id="set-early"><span class="track"></span><span>End early when everyone has it<small>Skips the wait once all players have answered correctly.</small></span></label>
+        <label class="toggle"><input type="checkbox" id="set-shuffle"><span class="track"></span><span>Shuffle the order<small>Songs play in a random order each game.</small></span></label>
       </div>
-      <p class="muted small" style="margin-top:14px">Scoring: 400–1000 points for the title (faster = more), plus 300 for the artist if the bonus is on. Players can guess as many times as they like.</p>
+      <p class="faint small" style="margin-top:20px">Correct titles score 400 to 1000 points, more for faster answers. Players can guess as many times as they like.</p>
     </section>
 
-    <div id="setup-errors" class="banner warn" hidden></div>
-    <div class="row" style="justify-content:flex-end">
-      <button class="primary big" id="btn-open-lobby">Open the lobby →</button>
+    <div id="setup-errors" class="notice warn" hidden style="margin-top:20px"></div>
+    <div class="footer-bar">
+      <span class="muted" id="setup-summary"></span>
+      <button class="btn-primary btn-lg" id="btn-open-lobby">Open the lobby</button>
     </div>
   </main>
 
   <!-- ───────── LOBBY ───────── -->
   <main class="wrap" data-screen="lobby" hidden>
     <div class="lobby">
-      <div>
-        <div class="join-how">On your phone, go to<br><span class="join-url" id="join-url"></span><br>and enter the code</div>
-        <div class="room-code" id="room-code">····</div>
-        <div class="row" style="margin-top:22px">
-          <span class="caps" id="player-count">Waiting for players…</span>
-        </div>
-        <div class="players" id="lobby-players"></div>
-        <p class="muted small" id="kick-hint" hidden>Click a name to remove that player.</p>
+      <div class="fluted calm">
+        <p class="join-steps">Join on your phone at <span class="url" id="join-url"></span> with this code</p>
+        <div class="room-code" id="room-code" aria-live="polite">····</div>
       </div>
-      <div class="center"><div class="qr" id="qr"></div></div>
+      <div class="qr-card">
+        <div id="qr"></div>
+        <p>Or point your camera here</p>
+      </div>
     </div>
-    <div class="row" style="justify-content:space-between;margin-top:30px">
-      <button class="ghost" id="btn-back-setup">← Back to setup</button>
-      <button class="primary big" id="btn-start">Start the quiz ⚔</button>
+    <div class="roster-head">
+      <h2 id="player-count">Players</h2>
+      <span class="faint small" id="kick-hint" hidden>Click a name to remove that player</span>
+    </div>
+    <div class="players" id="lobby-players"></div>
+    <div class="footer-bar" style="margin-top:36px">
+      <button class="btn-quiet" id="btn-back-setup">Back to setup</button>
+      <button class="btn-primary btn-lg" id="btn-start">Start the quiz</button>
     </div>
   </main>
 
   <!-- ───────── QUESTION ───────── -->
   <main class="wrap stage" data-screen="question" hidden>
-    <div class="q-label" id="q-label">SONG 1 OF 10</div>
-    <div class="q-title">Name that tune!</div>
-    <div class="timer" id="timer">30</div>
-    <div class="bar"><div id="timer-bar"></div></div>
-    <div class="answered" id="answered">0 of 0 have it</div>
-    <div class="players" id="q-players" style="justify-content:center"></div>
+    <div class="stage-head">
+      <h1 id="q-label">Song 1 of 10</h1>
+      <div class="progress-dots" id="q-dots" aria-hidden="true"></div>
+    </div>
+    <div class="fluted thermo" id="thermo">
+      <div class="timer" id="timer" aria-live="off">30</div>
+      <div class="timer-track"><div id="timer-bar"></div></div>
+      <p class="found" id="answered"></p>
+    </div>
+    <div class="players" id="q-players"></div>
     <div class="player-box" id="player-box">
-      <div class="cover"><span><span class="eq"><i></i><i></i><i></i><i></i></span>Mystery song</span></div>
+      <div class="cover">
+        <span class="eq"><i></i><i></i><i></i><i></i></span>
+        <span>Mystery track<small>The Spotify player is hidden so the title stays secret.</small></span>
+      </div>
       <div id="spotify-embed"></div>
     </div>
-    <div id="play-hint" class="banner warn" style="max-width:560px;margin:12px auto 0" hidden>
-      Your browser blocked autoplay. Press ▶ in the Spotify player once, and it'll work from then on.
-    </div>
-    <div class="controls">
-      <button class="ghost" id="btn-replay">↺ Replay clip</button>
-      <button class="ghost" id="btn-pause">❚❚ Pause music</button>
-      <button class="ghost" id="btn-plus">+10 s</button>
-      <button class="ghost" id="btn-peek">Show player</button>
-      <button class="gold big" id="btn-reveal">Reveal answer →</button>
+    <div id="play-hint" class="notice warn" hidden style="margin:0">Your browser blocked autoplay. Press play in the Spotify player once and it'll start on its own from then on.</div>
+    <div class="dock">
+      <div class="tools">
+        <button id="btn-replay"><svg><use href="#i-replay"/></svg>Replay clip</button>
+        <button id="btn-pause" data-on="false">
+          <span class="swap"><svg><use href="#i-pause"/></svg><svg><use href="#i-play"/></svg></span>
+          <span class="swap-label"><span>Pause</span><span>Play</span></span>
+        </button>
+        <button id="btn-plus"><svg><use href="#i-plus"/></svg>Add 10 seconds</button>
+        <button id="btn-peek" data-on="false">
+          <span class="swap"><svg><use href="#i-eye"/></svg><svg><use href="#i-eye-off"/></svg></span>
+          <span class="swap-label"><span>Show player</span><span>Hide player</span></span>
+        </button>
+      </div>
+      <button class="btn-gold btn-lg" id="btn-reveal">Reveal answer</button>
     </div>
   </main>
 
   <!-- ───────── REVEAL ───────── -->
   <main class="wrap" data-screen="reveal" hidden>
-    <div class="reveal-head">
-      <img id="rv-thumb" alt="" hidden>
-      <div class="center">
-        <div class="it-was">IT WAS…</div>
+    <section class="fluted calm reveal-hero" id="reveal-hero">
+      <div id="rv-art"></div>
+      <div>
         <div class="answer-title" id="rv-title"></div>
         <div class="answer-artist" id="rv-artist"></div>
         <div class="cover-line" id="rv-cover"></div>
       </div>
-    </div>
+    </section>
     <div class="grid-2">
-      <section class="card">
+      <section class="panel">
         <h2>This round</h2>
         <ul class="list" id="rv-round"></ul>
       </section>
-      <section class="card">
+      <section class="panel" style="margin-top:0">
         <h2>Leaderboard</h2>
         <ul class="list" id="rv-board"></ul>
       </section>
     </div>
-    <div class="row" style="justify-content:space-between">
-      <button class="ghost" id="btn-pause-2">❚❚ Pause music</button>
-      <button class="primary big" id="btn-next">Next song →</button>
+    <div class="footer-bar">
+      <button id="btn-pause-2" data-on="false">
+        <span class="swap"><svg><use href="#i-pause"/></svg><svg><use href="#i-play"/></svg></span>
+        <span class="swap-label"><span>Pause music</span><span>Play music</span></span>
+      </button>
+      <button class="btn-primary btn-lg" id="btn-next">Next song</button>
     </div>
   </main>
 
   <!-- ───────── FINAL ───────── -->
-  <main class="wrap center" data-screen="final" hidden>
-    <div class="q-title" style="margin-top:10px">Hail the champions!</div>
+  <main class="wrap" data-screen="final" hidden>
+    <h1 class="final-title">Hail the champions</h1>
     <div class="podium" id="podium"></div>
-    <section class="card" style="max-width:640px;margin:0 auto 20px;text-align:left">
+    <section class="panel" style="max-width:640px;margin:0 auto">
       <h2>Final standings</h2>
       <ul class="list" id="final-board"></ul>
     </section>
-    <button class="ghost" id="btn-new-game">New game</button>
+    <div class="center" style="margin-top:24px"><button id="btn-new-game">Start a new game</button></div>
   </main>
 
   <script type="module" src="js/host.js"></script>
