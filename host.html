@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1c120f">
+  <meta name="theme-color" content="#121212">
   <title>Bardcore Quiz · Host</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238f2a2a'/><path d='M13 22V9l9-2v13' stroke='%23e9c46a' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='10.5' cy='22' r='2.6' fill='%23e9c46a'/><circle cx='19.5' cy='20' r='2.6' fill='%23e9c46a'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%231ed760'/><path d='M13 22V9l9-2v13' stroke='%23121212' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='10.5' cy='22' r='2.6' fill='%23121212'/><circle cx='19.5' cy='20' r='2.6' fill='%23121212'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/style.css">
@@ -93,7 +93,7 @@
   <!-- ───────── LOBBY ───────── -->
   <main class="wrap" data-screen="lobby" hidden>
     <div class="lobby">
-      <div class="jelly stacked lobby-card">
+      <div class="jelly accent lobby-card">
         <p class="join-steps">Join on your phone at <span class="url" id="join-url"></span> with this code</p>
         <div class="room-code" id="room-code" aria-live="polite">····</div>
       </div>
@@ -119,7 +119,7 @@
       <h1 id="q-label">Song 1 of 10</h1>
       <div class="progress-dots" id="q-dots" aria-hidden="true"></div>
     </div>
-    <div class="jelly stacked thermo" id="thermo">
+    <div class="jelly thermo" id="thermo">
       <div class="timer" id="timer" aria-live="off">30</div>
       <div class="timer-track"><div id="timer-bar"></div></div>
       <p class="found" id="answered"></p>
@@ -152,7 +152,7 @@
 
   <!-- ───────── REVEAL ───────── -->
   <main class="wrap" data-screen="reveal" hidden>
-    <section class="jelly stacked reveal-hero" id="reveal-hero">
+    <section class="jelly reveal-hero" id="reveal-hero">
       <div id="rv-art"></div>
       <div>
         <div class="answer-title display" id="rv-title"></div>
