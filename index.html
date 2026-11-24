@@ -32,12 +32,12 @@
     <section data-screen="join">
       <div id="demo-banner" class="notice" hidden>Demo mode: this only works in another tab on the host's computer.</div>
       <div class="jelly accent" style="margin-bottom:14px">
-        <h1 class="hello display" style="font-size:34px">Name that tune,<br>medieval edition</h1>
-        <p class="muted" style="margin-top:8px">Listen to the cover on the big screen, then type the original song's title.</p>
+        <h1 class="hello display" style="font-size:34px">Gæt sangen,<br>medieval edition</h1>
+        <p class="muted" style="margin-top:8px">Lyt og gæt derefter sangens originale titel.</p>
       </div>
       <form class="panel stack" id="join-form" autocomplete="off">
         <label class="field">Room code<input class="code-input" id="in-code" maxlength="4" autocapitalize="characters" autocomplete="off" required placeholder="ABCD"></label>
-        <label class="field">Your name or team name<input id="in-name" maxlength="20" required placeholder="Sir Lancelot"></label>
+        <label class="field">Dit navn eller hold navn<input id="in-name" maxlength="20" required placeholder="Sir Lancelot"></label>
         <button class="btn-primary btn-lg" id="btn-join" style="width:100%">Join the game</button>
         <p class="feedback wrong" id="join-error" style="margin:0;min-height:0"></p>
       </form>
@@ -49,7 +49,7 @@
       <div class="jelly accent center" style="padding:36px 24px">
         <p class="muted">You're in as</p>
         <h1 class="hello display" id="wait-name" style="font-size:44px;margin:4px 0 14px;overflow-wrap:anywhere"></h1>
-        <p id="wait-text">Watch the big screen. The first song starts soon.</p>
+        <p id="wait-text">Den første sang kommer snart!.</p>
         <p class="faint small" id="wait-count" style="margin-top:8px"></p>
       </div>
     </section>
@@ -58,12 +58,12 @@
     <section data-screen="question" hidden>
       <div class="jelly phone-thermo" id="pq-thermo">
         <div class="t" id="pq-timer">30</div>
-        <div class="meta"><b id="pq-score">0</b><span id="pq-label">Song 1 of 10</span></div>
+        <div class="meta"><b id="pq-score">0</b><span id="pq-label">Sang 1 of 10</span></div>
       </div>
       <div class="timer-track" style="margin:0 0 14px;max-width:none"><div id="pq-bar"></div></div>
 
       <div class="panel">
-        <div class="section-label">Song title</div>
+        <div class="section-label">Sang titel</div>
         <div id="title-area">
           <form class="guess-form" id="title-form" autocomplete="off">
             <input class="guess-input" id="title-input" placeholder="Type your guess" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Song title">
@@ -88,7 +88,7 @@
           <div id="artist-solved" class="solved-box bonus" hidden></div>
         </div>
       </div>
-      <div class="notice" id="locked-box" hidden style="margin-top:14px">Time's up. The answer is on the big screen.</div>
+      <div class="notice" id="locked-box" hidden style="margin-top:14px">Tiden er oppe, se answer-reveal!.</div>
     </section>
 
     <!-- REVEAL -->
@@ -102,7 +102,7 @@
         <div class="big-points" id="pr-points"></div>
         <p class="muted" id="pr-rank" style="margin-top:6px"></p>
       </div>
-      <p class="center faint small" style="margin-top:16px">The host starts the next song.</p>
+      <p class="center faint small" style="margin-top:16px">Næste snart kommer snart!.</p>
     </section>
 
     <!-- FINAL -->
