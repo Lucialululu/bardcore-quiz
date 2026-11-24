@@ -1,6 +1,7 @@
 import { connect, DEMO } from './net.js';
 import { checkGuess, splitAlts } from './match.js';
 import { toUri, fetchInfo, createPlayer } from './spotify.js';
+import { songsFromCsv, songsToCsv } from './csv.js';
 
 // ───────────────────────── helpers ─────────────────────────
 const $ = (s, r = document) => r.querySelector(s);
@@ -11,7 +12,7 @@ const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } cat
 
 const QUIZ_KEY = 'bq-quiz-v1';
 const GAME_KEY = 'bq-game-v1';
-const DEFAULTS = { duration: 30, artistBonus: true, autoReveal: true, endEarly: true, shuffle: false };
+const DEFAULTS = { duration: 30, artistBonus: true, autoReveal: true, endEarly: true, shuffle: false, roomCode: '' };
 const TITLE_MAX = 1000, TITLE_MIN = 400, ARTIST_PTS = 300;
 
 const blankSong = () => ({ id: uid(), url: '', title: '', artist: '', alts: '', start: 0, thumb: '', coverName: '' });
@@ -128,22 +129,56 @@ $('#btn-bulk-add').onclick = () => {
   added.forEach(lookupSong);
 };
 
-$('#btn-export').onclick = () => {
-  const blob = new Blob([JSON.stringify(quiz, null, 2)], { type: 'application/json' });
+function download(name, text, type) {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = 'bardcore-quiz.json'; a.click();
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+// Export as CSV so it opens in Excel, Numbers or Google Sheets
+$('#btn-export').onclick = () => {
+  const songs = quiz.songs.filter((x) => x.url.trim() || x.title.trim());
+  download('bardcore-quiz.csv', '\uFEFF' + songsToCsv(songs), 'text/csv;charset=utf-8');
+};
+$('#btn-template').onclick = (e) => {
+  e.preventDefault();
+  download('bardcore-quiz-template.csv', '\uFEFF' + songsToCsv([
+    { url: 'https://open.spotify.com/track/PASTE_TRACK_ID_HERE', title: 'Bad Romance', artist: 'Lady Gaga', alts: 'Rah rah ah ah ah, Gaga oh la la', start: 0 },
+    { url: 'https://open.spotify.com/track/PASTE_TRACK_ID_HERE', title: 'Bohemian Rhapsody', artist: 'Queen', alts: '', start: 15 },
+  ]), 'text/csv;charset=utf-8');
 };
 $('#btn-import').onclick = () => $('#file-import').click();
 $('#file-import').onchange = async (e) => {
   const file = e.target.files[0]; if (!file) return;
-  try {
-    const data = JSON.parse(await file.text());
-    if (!Array.isArray(data.songs)) throw new Error('No songs in file');
-    quiz = { songs: data.songs.map((s) => ({ ...blankSong(), ...s, id: uid() })), settings: { ...DEFAULTS, ...data.settings } };
-    saveQuiz(); renderSongs(); renderSettings();
-  } catch (err) { alert('Could not read that file: ' + err.message); }
   e.target.value = '';
+  const box = $('#import-msg');
+  try {
+    const text = await file.text();
+    let incoming = [], settings = null;
+    if (/\.json$/i.test(file.name) || /^\s*\{/.test(text)) {
+      const data = JSON.parse(text);
+      if (!Array.isArray(data.songs)) throw new Error('there are no songs in it');
+      incoming = data.songs; settings = data.settings;
+    } else {
+      incoming = songsFromCsv(text);
+    }
+    if (!incoming.length) throw new Error('no rows with a Spotify link or song title were found');
+    // Added after the songs you already have; nothing is overwritten.
+    const keep = quiz.songs.filter((x) => x.url.trim() || x.title.trim());
+    const added = incoming.map((x) => ({ ...blankSong(), ...x, id: uid(), start: Math.max(0, Number(x.start) || 0) }));
+    quiz.songs = [...keep, ...added];
+    if (settings) quiz.settings = { ...DEFAULTS, ...settings };
+    saveQuiz(); renderSongs(); renderSettings();
+    added.filter((x) => !x.thumb).forEach(lookupSong);
+    const bad = added.filter((x) => !toUri(x.url)).length;
+    box.className = bad ? 'notice warn' : 'notice';
+    box.innerHTML = `<span>Added <b>${added.length}</b> ${added.length === 1 ? 'song' : 'songs'} from ${esc(file.name)}.${bad ? ` ${bad === 1 ? '1 of them needs' : bad + ' of them need'} a valid Spotify link (marked in orange).` : ''}</span>`;
+    box.hidden = false;
+  } catch (err) {
+    box.className = 'notice error';
+    box.innerHTML = `<span><b>Couldn't import ${esc(file.name)}:</b> ${esc(err.message)}.</span>`;
+    box.hidden = false;
+  }
 };
 
 function renderSummary() {
@@ -165,8 +200,16 @@ function renderSettings() {
   $('#set-autoreveal').checked = st.autoReveal;
   $('#set-early').checked = st.endEarly;
   $('#set-shuffle').checked = st.shuffle;
+  $('#set-code').value = st.roomCode || '';
 }
 $('#set-duration').oninput = (e) => { quiz.settings.duration = Number(e.target.value); renderDuration(); renderSummary(); saveQuiz(); };
+$('#set-code').oninput = (e) => {
+  const v = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
+  e.target.value = v;
+  quiz.settings.roomCode = v;
+  e.target.classList.toggle('bad', v.length > 0 && v.length < 4);
+  saveQuiz();
+};
 [['#set-artist', 'artistBonus'], ['#set-autoreveal', 'autoReveal'], ['#set-early', 'endEarly'], ['#set-shuffle', 'shuffle']]
   .forEach(([sel, key]) => { $(sel).onchange = (e) => { quiz.settings[key] = e.target.checked; saveQuiz(); }; });
 
@@ -202,6 +245,8 @@ function tint(pid) {
 }
 
 function makeCode() {
+  const fixed = String(quiz.settings.roomCode || '').toUpperCase();
+  if (/^[A-Z]{4}$/.test(fixed)) return fixed;
   const A = 'ABCDEFGHJKLMNPRSTUVWXYZ';
   return Array.from({ length: 4 }, () => A[Math.floor(Math.random() * A.length)]).join('');
 }

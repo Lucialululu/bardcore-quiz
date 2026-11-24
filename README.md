@@ -32,7 +32,21 @@ Host controls during a song: **Replay clip**, **Pause music**, **+10 s**, **Show
 | End early | If everyone has found the answer (and the artist, if the bonus is on), end the song right away |
 | Shuffle | Randomise the song order when the game starts |
 
-Your song list is saved in the host browser automatically. Use **Export quiz** and **Import quiz** to keep it as a file or move it to another computer. If the host tab is refreshed mid-game, a **Resume** button brings the game back.
+Your song list is saved automatically in the host's browser as you type. It survives reloads, but it stays on that browser and computer. **Export CSV** downloads the list as a spreadsheet file, as a backup or to move it to another computer.
+
+### Premade quizzes from a spreadsheet
+
+Fill in a spreadsheet in Excel, Numbers or Google Sheets with these columns (or use [`quiz-template.csv`](quiz-template.csv), or the template link on the setup screen):
+
+| Spotify link | Song title | Original artist | Also accept | Start at (seconds) |
+|---|---|---|---|---|
+| https://open.spotify.com/track/… | Bad Romance | Lady Gaga | Rah rah ah ah ah, Gaga oh la la | 0 |
+
+Save it as CSV and click **Import CSV**. The songs are added after any you already have, so nothing is overwritten. Comma- and semicolon-separated files both work, and the header row is optional. Without a header, put the columns in the order above.
+
+### Fixed room code
+
+In **Game settings**, set a **Room code** (4 letters, e.g. `BARD`) to use the same code every game, so you can share it in advance or print it. Leave it empty to get a random code. If the host tab is refreshed mid-game, a **Resume** button brings the game back.
 
 ### Answer tips
 
