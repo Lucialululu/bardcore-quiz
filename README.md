@@ -1,11 +1,11 @@
-# 🪕 Bardcore Quiz
+# **Bardcore Quiz**
 
-A live music quiz for medieval ("bardcore") covers of modern songs. The host screen plays the cover from Spotify, players type the original song's title on their phones, and near-misses get a **"So close! 🔥"** nudge without giving the answer away.
+This is a live music quiz for medieval ("bardcore") covers of modern songs. The host screen plays the cover from Spotify, and players type the original song's title on their phones, and near-misses get a "you are close" hint/ nudge without giving the answer away.
 
 - **Host screen** (`/host`): set up songs and settings, show the room code + QR code, play each clip, reveal the answer and the scores.
 - **Phones** (`/`): join with a 4-letter code and a name (or team name), then guess as many times as they like.
 
-No build step, no server code: it's a static site. The live connection between phones and the host uses **Supabase Realtime** (free plan).
+No build step, no server code: it is a static site. The live connection between phones and the host uses **Supabase Realtime** (free plan).
 
 ---
 
@@ -15,7 +15,7 @@ No build step, no server code: it's a static site. The live connection between p
 2. **Lobby**: the big screen shows the join address, a QR code and the room code. Players appear as they join. Click a name to remove a player.
 3. **Each song**: the clip plays while the Spotify player stays hidden, so the title isn't shown. Players type guesses with unlimited tries:
    - **Correct**: small typos, capital letters, punctuation and a leading "The" are all forgiven. 400–1000 points, and faster answers earn more.
-   - **So close! 🔥**: the guess is near the answer (a misspelling, or part of the title). The answer itself is never shown.
+   - **So close!**: the guess is near the answer (a misspelling, or part of the title). The answer itself is never shown.
    - **Artist bonus** (optional): +300 for the original artist.
 4. **Reveal**: when time runs out (or you press **Reveal answer**), the big screen shows the answer, who got it and how fast, points this round, and the leaderboard with ▲▼ moves. You press **Next song** when you're ready.
 5. **Final**: a podium and the full standings.
